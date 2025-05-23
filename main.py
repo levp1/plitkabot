@@ -1,4 +1,3 @@
-
 import os
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from telegram.ext import (
@@ -11,14 +10,11 @@ from telegram.ext import (
 )
 import logging
 
-# Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
-# Define states
 NAME, PHONE, EXPERIENCE, TOOL, CAR, CITIZEN, HABITS, PHOTO, READY = range(9)
-
 admin_chat_id = -4769038698  # Куда отправлять анкеты
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -39,18 +35,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 💰 *Оплата:*
 • Плитка — ~1600 ₽/м²
-• Отдельно оплачиваются: демонтаж, затирка, порожки, сантехника и др.
-• Аванс 20% — после завершения работ
-• Основной платёж — в день выплат от Лемана Про
+• Доплаты за демонтаж, сантехнику и т.д.
+• Аванс 20% после приёмки работ
+• Выплаты в день платежа от Лемана Про
 • Доход от 120 000 ₽/мес
 
 📦 *Условия:*
 • Работа по договору
 • Спецодежда — выдаётся
 • Инструмент — желательно свой (можем доукомплектовать)
-• Стабильные заказы по Тюмени
+• Заказы — стабильно, без простоев
 
-👇 Если всё устраивает — жми кнопку ниже и подай анкету. Это займёт не больше 2 минут.""",
+👇 Если устраивает — жми кнопку и подай анкету. Это займёт 2 минуты.""",
         reply_markup=markup,
     )
     return NAME
@@ -102,28 +98,26 @@ async def get_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def final_step(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["ready"] = update.message.text
 
-    user_info = f"""👤 Имя: {context.user_data.get('name')}
+    user_info = f"""📥 Новая анкета плиточника:
+
+👤 Имя: {context.user_data.get('name')}
 📞 Телефон: {context.user_data.get('phone')}
 🛠️ Опыт: {context.user_data.get('experience')}
 🔧 Инструмент: {context.user_data.get('tool')}
 🚗 Авто: {context.user_data.get('car')}
 🇷🇺 Гражданство РФ: {context.user_data.get('citizen')}
 💭 Вредные привычки: {context.user_data.get('habits')}
-📆 Готовность выйти: {context.user_data.get('ready')}"""
+📆 Готовность выйти: {context.user_data.get('ready')}
+📸 Фото: {context.user_data.get('photo')}
+"""
 
     await update.message.reply_text(
-        "✅ Спасибо, анкета отправлена!
-
-"
-        "Мы свяжемся с вами в течение 1–2 рабочих дней.
-"
-        "А пока — подготовьте инструмент, фото своих лучших работ и будьте на связи.
-
-"
-        "🟢 Лучшие мастера попадают в приоритетный список — не пропусти свой шанс 😉"
+        "✅ Спасибо, анкета отправлена!\n\n"
+        "Мы свяжемся с вами в течение 1–2 рабочих дней.\n"
+        "🟢 Лучшие мастера получают заказы первыми!"
     )
 
-    await context.bot.send_message(chat_id=admin_chat_id, text=f"📥 Новая анкета плиточника:\n\n{user_info}")
+    await context.bot.send_message(chat_id=admin_chat_id, text=user_info)
     return ConversationHandler.END
 
 TOKEN = os.getenv("TELEGRAM_TOKEN")
