@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         """👷‍♂️ Приветствуем!
 
-Наша компания выполняет ремонты санузлов *под ключ* в Тюмени по заказам от Лемана Про (Леруа Мерлен).
+Наша компания выполняет ремонты санузлов *под ключ* в Тюмени по заказам от Леруа Мерлен (через подрядчика Лемана Про).
 Сейчас мы набираем опытных плиточников и мастеров отделки.
 
 📋 *Что входит в работы:*
@@ -48,7 +48,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 • Работа по договору
 • Спецодежда — выдаётся
 • Инструмент — желательно свой (можем доукомплектовать)
-• Стабильные заказы по Тюмени и пригородам
+• Стабильные заказы по Тюмени
 
 👇 Если всё устраивает — жми кнопку ниже и подай анкету. Это займёт не больше 2 минут.""",
         reply_markup=markup,
@@ -102,23 +102,14 @@ async def get_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def final_step(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data["ready"] = update.message.text
 
-    user_info = (
-        f"👤 Имя: {context.user_data.get('name')}
-"
-        f"📞 Телефон: {context.user_data.get('phone')}
-"
-        f"🛠️ Опыт: {context.user_data.get('experience')}
-"
-        f"🔧 Инструмент: {context.user_data.get('tool')}
-"
-        f"🚗 Авто: {context.user_data.get('car')}
-"
-        f"🇷🇺 Гражданство РФ: {context.user_data.get('citizen')}
-"
-        f"💭 Вредные привычки: {context.user_data.get('habits')}
-"
-        f"📆 Готовность выйти: {context.user_data.get('ready')}"
-    )
+    user_info = f"""👤 Имя: {context.user_data.get('name')}
+📞 Телефон: {context.user_data.get('phone')}
+🛠️ Опыт: {context.user_data.get('experience')}
+🔧 Инструмент: {context.user_data.get('tool')}
+🚗 Авто: {context.user_data.get('car')}
+🇷🇺 Гражданство РФ: {context.user_data.get('citizen')}
+💭 Вредные привычки: {context.user_data.get('habits')}
+📆 Готовность выйти: {context.user_data.get('ready')}"""
 
     await update.message.reply_text(
         "✅ Спасибо, анкета отправлена!
@@ -132,9 +123,7 @@ async def final_step(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🟢 Лучшие мастера попадают в приоритетный список — не пропусти свой шанс 😉"
     )
 
-    await context.bot.send_message(chat_id=admin_chat_id, text=f"📥 Новая анкета плиточника:
-
-{user_info}")
+    await context.bot.send_message(chat_id=admin_chat_id, text=f"📥 Новая анкета плиточника:\n\n{user_info}")
     return ConversationHandler.END
 
 TOKEN = os.getenv("TELEGRAM_TOKEN")
